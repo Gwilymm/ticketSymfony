@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Ticket;
+use App\Repository\TicketRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,13 +11,30 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TicketController extends AbstractController
 {
+
+
+    protected TicketRepository $ticketRepository;
+
+
+    /**
+     * Undocumented function
+     *
+     * @param TicketRepository $ticketRepository
+     */
+    public function __construct(TicketRepository $ticketRepository)
+    {
+        $this->ticketRepository = $ticketRepository;
+    }
+
+
+
     /**
      * @Route("/ticket", name="app_ticket")
      */
-    public function index(ManagerRegistry $doctrine): Response
+    public function index(TicketRepository $repository): Response
     {
 
-        $repository = $doctrine->getRepository(Ticket::class);
+
         $tickets = $repository->findAll();
         dd($tickets);
 
