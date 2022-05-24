@@ -53,7 +53,23 @@ class TicketController extends AbstractController
 
         $ticket = new Ticket;
 
+        $ticket->setIsActive(true)
+            ->setCreatedAt(new \DateTimeImmutable());
+
         $form = $this->createForm(TicketType::class, $ticket, []);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $ticket->setObject($form['object']->getData())
+                ->setMessage($form['message']->getData())
+                ->setDepartement($form['departement']->getData());
+
+            $this->ticketRepository->add($ticket, true);
+            return $this->redirectToRoute('app_ticket');
+        }
+
+
 
 
 
