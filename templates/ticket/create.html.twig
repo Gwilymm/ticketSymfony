@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	Formulaire ticket
+{% endblock %}
+{% block body %}
+	<div class="container">
+		<h1>Création d'un ticket</h1>
+		{{form_start(form)}}
+		{{form_widget(form)}}
+		{{form_end(form)}}
+	</div>
+{% endblock %}

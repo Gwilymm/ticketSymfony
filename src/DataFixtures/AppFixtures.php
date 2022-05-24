@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Departement;
 use App\Entity\Ticket;
 use App\Faker\Provider\ImmutableDateTime;
 use Faker\Factory;
@@ -12,10 +13,32 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
+
 
         $faker = Factory::create('fr_FR');
+
+        /**
+         * création de département *10
+         */
+        for ($d = 0; $d < 10; $d++) {
+            $departement = new Departement;
+
+            $departement->setName($faker->company());
+
+
+            $manager->persist($departement);
+        }
+
+        /**
+         * On push les de)p en bdd
+         */
+        $manager->flush();
+
+        $allDpartements = $manager->getRepository(Departement::class)
+            ->findAll();
+
+
+
 
         // création entre 30 et 50 ticket aléatoire
         for ($t = 0; $t < mt_rand(30, 50); $t++) {
@@ -27,7 +50,8 @@ class AppFixtures extends Fixture
                 ->setIsActive($faker->boolean(75))
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setFinishedAt(!$ticket->getIsActive() ? ImmutableDateTime::immutableDateTimeBetween('now', '6 months') : null)
-                ->setObject($faker->sentence(6));
+                ->setObject($faker->sentence(6))
+                ->setDepartement($faker->randomElement($allDpartements));
 
             $manager->persist($ticket);
         }
