@@ -46,7 +46,15 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/ticket/create", name="ticket_create")
+     * @Route("/ticket/userForm", name="ticket_create")
+     */
+    /**
+     * Il crée un nouveau ticket, définit la date de création et le statut actif sur vrai, crée un
+     * formulaire, gère la demande, vérifie si le formulaire est soumis et valide, ajoute le ticket à la
+     * base de données et redirige vers la page du ticket
+     * @param Request  $request - L'objet de la requête.
+     * 
+     * Generated on 05/24/2022 Gwilymm
      */
     public function creatTicket(Request $request)
     {
@@ -61,22 +69,44 @@ class TicketController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $ticket->setObject($form['object']->getData())
-                ->setMessage($form['message']->getData())
-                ->setDepartement($form['departement']->getData());
 
             $this->ticketRepository->add($ticket, true);
             return $this->redirectToRoute('app_ticket');
         }
 
-
-
-
-
         return $this->render(
-            'ticket/create.html.twig',
+            'ticket/userForm.html.twig',
             [
                 'form' => $form->createView(),
+                'title' => 'Création d\'un ticket'
+            ]
+        );
+    }
+
+    /**
+     * @Route("/ticket/update/{id}", name="ticket_update",requirements={"id"="\d+"})
+     *
+     * @param Request $request
+     *
+     */
+    public function updateTicket(Ticket $ticket, Request $request)
+    {
+
+        $form = $this->createForm(TicketType::class, $ticket, []);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $this->ticketRepository->update($ticket, true);
+            return $this->redirectToRoute('app_ticket');
+        }
+
+        return $this->render(
+            'ticket/userForm.html.twig',
+            [
+                'form' => $form->createView(),
+                'title' => "Modification du ticket n° : {$ticket->getId()}"
             ]
         );
     }
