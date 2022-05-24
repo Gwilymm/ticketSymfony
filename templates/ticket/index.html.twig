@@ -3,31 +3,46 @@
 {% block title %}Liste des Tickets
 {% endblock %}
 
+{% block stylesheets %}
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.12.0/css/jquery.dataTables.min.css">
+{% endblock %}
+
+
 {% block body %}
+	<div class="container">
+		<h1 class="my-3">
+			Liste des Tickets
+		</h1>
+		<table class="table table-striped tabled-bordered" id="myTable">
+			<thead>
+				<th>ID</th>
+				<th>Object</th>
+				<th>Created At</th>
+				<th>Status</th>
+			</thead>
+			<tbody>
+				{% for ticket in tickets %}
 
-	<h1>
-		Liste des Tickets
-	</h1>
-	<table>
-		<thead>
-			<th>ID</th>
-			<th>Object</th>
-			<th>Created At</th>
-			<th>Status</th>
-		</thead>
-		<tbody>
-			{% for ticket in tickets %}
+					<tr>
+						<th scope="row">{{ticket.ID}}</th>
+						<td>{{ticket.object}}</td>
+						<td>{{ticket.createdAt | date('d/m/Y H:i')}}</td>
+						<td>{{ticket.isActive}}</td>
+					</tr>
 
-				<tr>
-					<th scope="row">{{ticket.ID}}</th>
-					<td>{{ticket.object}}</td>
-					<td>{{ticket.createdAt | date('d/m/Y H:i')}}</td>
-					<td>{{ticket.isActive}}</td>
-				</tr>
-
-			{% endfor %}
+				{% endfor %}
 
 
-		</tbody>
-	</table>
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
+	<script>
+		$(document).ready(function () {
+$('#myTable').DataTable();
+});
+	</script>
 {% endblock %}

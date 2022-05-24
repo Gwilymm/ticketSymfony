@@ -7,4 +7,11 @@
 /public/bundles/
 /var/
 /vendor/
+
 ###< symfony/framework-bundle ###
+.phpdoc/
+
+docs/
+phpDocumentor.phar
+.phpdoc/cache/
+docs/api/

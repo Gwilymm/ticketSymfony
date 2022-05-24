@@ -47,6 +47,12 @@ class Ticket
      */
     private $object;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="tickets")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $departement;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +126,18 @@ class Ticket
     public function setObject(string $object): self
     {
         $this->object = $object;
+
+        return $this;
+    }
+
+    public function getDepartement(): ?Departement
+    {
+        return $this->departement;
+    }
+
+    public function setDepartement(?Departement $departement): self
+    {
+        $this->departement = $departement;
 
         return $this;
     }
