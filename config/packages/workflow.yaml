@@ -1,0 +1,27 @@
+framework:
+  workflows:
+    ticketTraitement:
+      type: "workflow" # or 'state_machine'
+      audit_trail:
+        enabled: true
+      marking_store:
+        type: "method"
+        property: "currentPlace"
+      supports:
+        - App\Entity\Ticket
+      initial_marking: initial
+      places:
+        - initial
+        - wip
+        - clientacceptance
+        - finished
+      transitions:
+        to_wip:
+          from: initial
+          to: wip
+        to_client:
+          from: wip
+          to: clientacceptance
+        to_finished:
+          from: clientacceptance
+          to: finished

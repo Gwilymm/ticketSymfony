@@ -54,6 +54,7 @@
             "template": "<#fb7e14>\ue0b1 </>{{ .Status }} ",
             "type": "poshgit"
           },
+          
           {
             "background": "#292929",
             "foreground": "#fb7e14",
@@ -76,49 +77,15 @@
             "template": " {{ .UpstreamIcon }}{{ .HEAD }}{{ .BranchStatus }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} \uf692 {{ .StashCount }}{{ end }} ",
             "type": "git"
           },
+          
           {
             "background": "#292929",
-            "foreground": "#da2626",
-            "foreground_templates": [
-              "{{ if eq \"Full\" .State.String }}#292929{{ end }}",
-              "{{ if eq \"Charging\" .State.String }}#40c4ff{{ end }}",
-              "{{ if eq \"Discharging\" .State.String }}#fb7e14{{ end }}"
-            ],
-            "properties": {
-              "charged_icon": "\uf240 ",
-              "charging_icon": "\uf583 ",
-              "discharging_icon": "\uf583 ",
-              "text": "\ue0b0"
-            },
-            "style": "powerline",
-            "template": " {{ if not .Error }}{{ .Icon }}{{ .Percentage }}{{ end }}{{ .Error }} \ue0b1",
-            "type": "battery"
-          },
-          {
-            "background": "#292929",
-            "background_templates": [
-              "{{ if gt .Code 0 }}#292929{{ end }}"
-            ],
-            "foreground": "#bc3237",
-            "properties": {
-              "always_enabled": true,
-              "display_exit_code": true
-            },
-            "style": "diamond",
-            "template": " {{ if gt .Code 0 }}\uf00d {{ .Meaning }}{{ else }}\uf00c{{ end }} ",
+            "foreground": "#fb7e14",
             "trailing_diamond": "\ue0b4",
-            "type": "exit"
-          }
-        ],
-        "type": "prompt"
-      },
-
-      {
-        "alignment": "right",
-        "segments": [
-
-          
-          
+            "style": "diamond",
+            "template": "\ue73d {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}",
+            "type": "php"
+          },
           {
             "foreground": "#292929",
             "background": "#fb7e14",
@@ -132,7 +99,18 @@
             "style": "diamond",
             "leading_diamond": "\ue0b4"
 
-        },
+        }
+        ],
+        "type": "prompt"
+      },
+
+      {
+        "alignment": "right",
+        "segments": [
+
+          
+          
+          
           
           {
             "background": "#292929",
@@ -144,16 +122,9 @@
             "template": "{{ .CurrentDate | date .Format }} \uf017 ",
             "trailing_diamond": "\ue0b4",
             "type": "time"
-          },
-
-          {
-            "background": "#292929",
-            "foreground": "#fb7e14",
-            "leading_diamond": "\ue0b2",
-            "style": "diamond",
-            "template": "\ue73d {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}",
-            "type": "php"
           }
+
+          
 
 
         ],
