@@ -40,7 +40,7 @@ class TicketController extends AbstractController
      */
     public function index(TicketRepository $repository): Response
     {
-
+        $user = $this->getUser();
 
         $tickets = $repository->findAll();
 
