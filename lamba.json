@@ -43,7 +43,7 @@
           },
           "style": "diamond",
           "template": " {{ .Path }} ",
-          "trailing_diamond": "\ue0b0",
+          
           "type": "path"
           },
 
@@ -57,8 +57,8 @@
           {
             "background": "#292929",
             "foreground": "#fb7e14",
-            "background_templates": [
-              "{{ if or (.Working.Changed) (.Staging.Changed) }}#addb67{{ end }}",
+            "foreground_templates": [
+              "{{ if or (.Working.Changed) (.Staging.Changed) }}#009de1{{ end }}",
               "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#f78c6c{{ end }}",
               "{{ if gt .Ahead 0 }}#21c7a8{{ end }}",
               "{{ if gt .Behind 0 }}#c792ea{{ end }}"
@@ -118,7 +118,7 @@
           
           {
             "background": "#292929",
-            "foreground": "#fb7e14",
+            "foreground": "#526d3a",
             "properties": {
               "time_format": "15:04:05"
             },
