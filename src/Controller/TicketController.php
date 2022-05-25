@@ -5,12 +5,12 @@ namespace App\Controller;
 use App\Entity\Ticket;
 use App\Form\TicketType;
 use App\Repository\TicketRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
-
+use Symfony\Component\Workflow\WorkflowInterface;
 
 /**
  * @Route("/ticket")
@@ -18,8 +18,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class TicketController extends AbstractController
 {
 
-
     protected TicketRepository $ticketRepository;
+
+    private WorkflowInterface $ticketTraitement;
 
 
     /**
@@ -50,11 +51,9 @@ class TicketController extends AbstractController
         ]);
     }
 
-
-
     /**
      * @Route("/userForm", name="ticket_create")
-     *  @Route("/update/{id}", name="ticket_update",requirements={"id"="\d+"})
+     * @Route("/update/{id}", name="ticket_update",requirements={"id"="\d+"})
      * 
      */
 
@@ -66,6 +65,7 @@ class TicketController extends AbstractController
             $ticket->setIsActive(true)
                 ->setCreatedAt(new \DateTimeImmutable());
             $title = 'Création d\'un ticket';
+            $this->ticketTraitement->apply($ticket, 'to_wip');
         } else {
             $title = "Modification du ticket n° : {$ticket->getId()}";
         }
@@ -101,5 +101,20 @@ class TicketController extends AbstractController
         $this->ticketRepository->remove($ticket, true);
 
         return $this->redirectToRoute('app_ticket');
+    }
+
+    /**
+     * @Route("/update/{id}/{to}", name="ticket_workflow")
+     */
+    public function changeTicketWorkflow(Ticket $ticket, String $to, EntityManagerInterface $entityManager)
+    {
+        $this->ticketTraitement->apply($ticket, $to);
+
+        $entityManager->persist($ticket);
+        $entityManager->flush();
+
+        $this->addFlash('success', "Ticket pris en charge !");
+
+        return $this->redirectToRoute('ticket_update');
     }
 }
