@@ -10,7 +10,8 @@
 
 ###< symfony/framework-bundle ###
 .phpdoc/
-
+/lamba.json
+/test.json
 docs/
 phpDocumentor.phar
 .phpdoc/cache/
