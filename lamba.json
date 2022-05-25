@@ -112,9 +112,27 @@
         ],
         "type": "prompt"
       },
+
       {
         "alignment": "right",
         "segments": [
+
+          
+          
+          {
+            "foreground": "#292929",
+            "background": "#fb7e14",
+            "properties": {
+              "url": "https://wakatime.com/api/v1/users/current/summaries?range=Last 7 Days&api_key=5e26abcc-0c63-4fbd-826a-9c4c1c24bb75",
+              "cache_timeout": 10,
+              "http_timeout": 500
+            },
+            "type": "wakatime",
+            "template": "{{ .CummulativeTotal.Seconds }}",
+            "style": "diamond",
+            "leading_diamond": "\ue0b4"
+
+        },
           
           {
             "background": "#292929",
@@ -126,14 +144,28 @@
             "template": "{{ .CurrentDate | date .Format }} \uf017 ",
             "trailing_diamond": "\ue0b4",
             "type": "time"
+          },
+
+          {
+            "background": "#292929",
+            "foreground": "#fb7e14",
+            "leading_diamond": "\ue0b2",
+            "style": "diamond",
+            "template": "\ue73d {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}",
+            "type": "php"
           }
+
+
         ],
         "type": "prompt"
       },
+
       {
         "alignment": "left",
         "newline": true,
         "segments": [
+
+          
           {
             "properties": {
               "always_enabled": true
