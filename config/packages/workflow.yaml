@@ -13,7 +13,8 @@ framework:
       places:
         - initial
         - wip
-        - clientacceptance
+        - clientAcceptance
+        - techConfirmation
         - finished
       transitions:
         to_wip:
@@ -21,7 +22,10 @@ framework:
           to: wip
         to_client:
           from: wip
-          to: clientacceptance
+          to: clientAcceptance
+        to_tech:
+          from: clientAcceptance
+          to: techConfirmation
         to_finished:
-          from: clientacceptance
+          from: [clientAcceptance, techConfirmation]
           to: finished
