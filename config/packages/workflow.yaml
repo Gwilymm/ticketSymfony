@@ -14,7 +14,6 @@ framework:
         - initial
         - wip
         - clientAcceptance
-        - techConfirmation
         - finished
       transitions:
         to_wip:
@@ -23,9 +22,6 @@ framework:
         to_client:
           from: wip
           to: clientAcceptance
-        to_tech:
-          from: clientAcceptance
-          to: techConfirmation
         to_finished:
-          from: [clientAcceptance, techConfirmation]
+          from: clientAcceptance
           to: finished
