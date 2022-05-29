@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Workflow\Registry;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 /**
@@ -29,9 +30,10 @@ class TicketController extends AbstractController
      * @param TicketRepository $ticketRepository
      */
 
-    public function __construct(TicketRepository $ticketRepository)
+    public function __construct(TicketRepository $ticketRepository, Registry $registry)
     {
         $this->ticketRepository = $ticketRepository;
+        $this->registry = $registry;
     }
 
 
@@ -44,6 +46,10 @@ class TicketController extends AbstractController
         $user = $this->getUser();
 
         $tickets = $repository->findAll();
+
+        
+
+        //dd($tickets);
 
 
         return $this->render('ticket/index.html.twig', [
@@ -62,6 +68,7 @@ class TicketController extends AbstractController
     {
         if (!$ticket) {
             $ticket = new Ticket;
+
             $ticket->setIsActive(true)
                 ->setCreatedAt(new \DateTimeImmutable());
             $title = 'Création d\'un ticket';
@@ -71,14 +78,23 @@ class TicketController extends AbstractController
         }
 
 
-
         $form = $this->createForm(TicketType::class, $ticket, []);
+
+        // modifier le status du ticket quand il est consulté
+        // changer le currentPlace de initial à wip avec le workflow
+        $workflow = $this->registry->get($ticket, 'ticketTraitement');
+        // erreur sur le type reçu par la method
+        //$workflow->apply($ticket, 'to_client');
+        dump($ticket);
+
+        dd($workflow);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             $this->ticketRepository->add($ticket, true);
+
             return $this->redirectToRoute('app_ticket');
         }
 
