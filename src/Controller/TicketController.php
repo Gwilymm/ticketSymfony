@@ -47,10 +47,7 @@ class TicketController extends AbstractController
 
         $tickets = $repository->findAll();
 
-        
-
         //dd($tickets);
-
 
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
@@ -83,18 +80,17 @@ class TicketController extends AbstractController
         // modifier le status du ticket quand il est consulté
         // changer le currentPlace de initial à wip avec le workflow
         $workflow = $this->registry->get($ticket, 'ticketTraitement');
-        // erreur sur le type reçu par la method
-        //$workflow->apply($ticket, 'to_client');
+        $workflow->apply($ticket, 'to_wip');
         dump($ticket);
-
+        
         dd($workflow);
-
+        
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
-
+            
             $this->ticketRepository->add($ticket, true);
-
+            
             return $this->redirectToRoute('app_ticket');
         }
 
