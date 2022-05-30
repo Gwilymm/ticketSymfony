@@ -83,9 +83,9 @@ class AppFixtures extends Fixture
 
             $ticket->setMessage($faker->paragraph(3))
                 ->setComment($faker->paragraph(3))
-                ->setIsActive($faker->boolean(75))
+                ->setTicketStatut($faker->randomElement(['initial']))
                 ->setCreatedAt(new \DateTimeImmutable())
-                ->setFinishedAt(!$ticket->getIsActive() ? ImmutableDateTime::immutableDateTimeBetween('now', '6 months') : null)
+                ->setFinishedAt($ticket->getTicketStatut() != "finished" ? ImmutableDateTime::immutableDateTimeBetween('now', '6 months') : null)
                 ->setObject($faker->sentence(6))
                 ->setDepartement($faker->randomElement($allDpartements));
 

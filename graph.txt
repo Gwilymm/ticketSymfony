@@ -1,0 +1,19 @@
+@startuml
+allow_mixing
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam state {
+    BackgroundColor<<initial>> #87b741
+    BackgroundColor<<marked>> #3887C6
+    BorderColor #3887C6
+    BorderColor<<marked>> Black
+    FontColor<<marked>> White
+}
+state "initial" <<initial>>
+state "wip"
+state "clientAcceptance"
+state "finished"
+"initial" --> "wip": "to_wip"
+"wip" --> "clientAcceptance": "to_client"
+"clientAcceptance" --> "finished": "to_finished"
+@enduml

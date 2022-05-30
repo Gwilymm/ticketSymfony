@@ -44,9 +44,9 @@ class Ticket
     private $comment;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="string", columnDefinition="ENUM('initial','wip','clientAcceptance','finished')")
      */
-    private $isActive;
+    private $ticket_statut;
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -155,6 +155,18 @@ class Ticket
     public function setDepartement(?Departement $departement): self
     {
         $this->departement = $departement;
+
+        return $this;
+    }
+
+    public function getTicketStatut(): ?string
+    {
+        return $this->ticket_statut;
+    }
+
+    public function setTicketStatut(string $ticket_statut): self
+    {
+        $this->ticket_statut = $ticket_statut;
 
         return $this;
     }

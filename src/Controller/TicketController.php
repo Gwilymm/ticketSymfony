@@ -63,15 +63,17 @@ class TicketController extends AbstractController
 
     public function ticket(Request $request, Ticket $ticket = null)
     {
+
         if (!$ticket) {
             $ticket = new Ticket;
 
-            $ticket->setIsActive(true)
+            $ticket->setTicketStatut("initial")
                 ->setCreatedAt(new \DateTimeImmutable());
             $title = 'Création d\'un ticket';
-            $this->ticketTraitement->apply($ticket, 'to_wip');
         } else {
             $title = "Modification du ticket n° : {$ticket->getId()}";
+            $workflow = $this->registry->get($ticket, 'ticketTraitement');
+            $workflow->apply($ticket, 'to_wip');
         }
 
 
@@ -79,18 +81,14 @@ class TicketController extends AbstractController
 
         // modifier le status du ticket quand il est consulté
         // changer le currentPlace de initial à wip avec le workflow
-        $workflow = $this->registry->get($ticket, 'ticketTraitement');
-        $workflow->apply($ticket, 'to_wip');
-        dump($ticket);
-        
-        dd($workflow);
-        
+
+
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
             $this->ticketRepository->add($ticket, true);
-            
+
             return $this->redirectToRoute('app_ticket');
         }
 
@@ -108,6 +106,7 @@ class TicketController extends AbstractController
      * @param Ticket $ticket
      * @return Reponse
      */
+
     public function deleteTicket(Ticket $ticket): Response
     {
         $this->ticketRepository->remove($ticket, true);
@@ -115,18 +114,19 @@ class TicketController extends AbstractController
         return $this->redirectToRoute('app_ticket');
     }
 
+
+
     /**
-     * @Route("/update/{id}/{to}", name="ticket_workflow")
+     * @Route("/close/{id}", name="ticket_close",requirements={"id"="\d+"})
      */
-    public function changeTicketWorkflow(Ticket $ticket, String $to, EntityManagerInterface $entityManager)
+    public function closeTicket(Ticket $ticket): Response
     {
-        $this->ticketTraitement->apply($ticket, $to);
+        $workflow = $this->registry->get($ticket, 'ticketTraitement');
+        $workflow->apply($ticket, 'to_finished');
+        $this->ticketRepository->add($ticket, true);
 
-        $entityManager->persist($ticket);
-        $entityManager->flush();
 
-        $this->addFlash('success', "Ticket pris en charge !");
 
-        return $this->redirectToRoute('ticket_update');
+        return $this->redirectToRoute('app_ticket');
     }
 }

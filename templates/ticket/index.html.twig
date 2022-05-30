@@ -5,6 +5,8 @@
 
 {% block stylesheets %}
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.12.0/css/jquery.dataTables.min.css">
+
+
 {% endblock %}
 
 
@@ -31,11 +33,24 @@
 						<td>{{ticket.object}}</td>
 						<td>{{ticket.createdAt | date('d/m/Y H:i')}}</td>
 						<td>{{ticket.departement.name}}</td>
-						<td>{{ticket.isActive}}</td>
+						<td>{{ticket.ticketStatut}}</td>
 						<td>
 
-							<a href="{{path('ticket_update',{'id' :ticket.id})}}" class="btn btn-success">Modifier</a>
-							<a href="{{path('ticket_delete',{'id' :ticket.id})}}" class="btn btn-danger">Supprimer</a>
+							<a href="{{path('ticket_update',{'id' :ticket.id})}}" class="btn btn-success">
+								<em class="fa-solid fa-gears"></em>
+							</a>
+							{% if ticket.ticketStatut == 'finished' %}
+								<a href="{{path('ticket_delete',{'id' :ticket.id})}}" class="btn btn-danger">
+									<i class="fa-solid fa-trash-can"></i>
+								</a>
+							{% endif %}
+
+							{% if ticket.ticketStatut == 'wip' %}
+								<a href="{{path('ticket_close',{'id' :ticket.id})}}" class="btn btn-warning">
+									<em class="fa-solid fa-square-xmark"></em>
+								</a>
+							{% endif %}
+
 						</td>
 					</tr>
 

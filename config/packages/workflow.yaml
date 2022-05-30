@@ -6,7 +6,7 @@ framework:
         enabled: true
       marking_store:
         type: "method"
-        property: "currentPlace"
+        property: "ticketStatut"
       supports:
         - App\Entity\Ticket
       initial_marking: initial
@@ -23,5 +23,5 @@ framework:
           from: wip
           to: clientAcceptance
         to_finished:
-          from: clientAcceptance
+          from: [wip, clientAcceptance]
           to: finished
