@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Ticket
 {
 
-    private $currentPlace;
+    private $currentPlace = 'initial';
     private $title;
     private $content;
 
@@ -68,6 +68,7 @@ class Ticket
      * @ORM\JoinColumn(nullable=false)
      */
     private $departement;
+
 
     public function getId(): ?int
     {

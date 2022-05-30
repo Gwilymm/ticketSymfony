@@ -1,7 +1,7 @@
 framework:
   workflows:
     ticketTraitement:
-      type: "workflow" # or 'state_machine'
+      type: "state_machine" # or 'state_machine'
       audit_trail:
         enabled: true
       marking_store:
@@ -13,7 +13,7 @@ framework:
       places:
         - initial
         - wip
-        - clientacceptance
+        - clientAcceptance
         - finished
       transitions:
         to_wip:
@@ -21,7 +21,7 @@ framework:
           to: wip
         to_client:
           from: wip
-          to: clientacceptance
+          to: clientAcceptance
         to_finished:
-          from: clientacceptance
+          from: clientAcceptance
           to: finished

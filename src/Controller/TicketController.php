@@ -5,12 +5,13 @@ namespace App\Controller;
 use App\Entity\Ticket;
 use App\Form\TicketType;
 use App\Repository\TicketRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
-
+use Symfony\Component\Workflow\Registry;
+use Symfony\Component\Workflow\WorkflowInterface;
 
 /**
  * @Route("/ticket")
@@ -18,8 +19,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class TicketController extends AbstractController
 {
 
-
     protected TicketRepository $ticketRepository;
+
+    private WorkflowInterface $ticketTraitement;
 
 
     /**
@@ -28,9 +30,10 @@ class TicketController extends AbstractController
      * @param TicketRepository $ticketRepository
      */
 
-    public function __construct(TicketRepository $ticketRepository)
+    public function __construct(TicketRepository $ticketRepository, Registry $registry)
     {
         $this->ticketRepository = $ticketRepository;
+        $this->registry = $registry;
     }
 
 
@@ -44,17 +47,16 @@ class TicketController extends AbstractController
 
         $tickets = $repository->findAll();
 
+        //dd($tickets);
 
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
         ]);
     }
 
-
-
     /**
      * @Route("/userForm", name="ticket_create")
-     *  @Route("/update/{id}", name="ticket_update",requirements={"id"="\d+"})
+     * @Route("/update/{id}", name="ticket_update",requirements={"id"="\d+"})
      * 
      */
 
@@ -63,22 +65,32 @@ class TicketController extends AbstractController
     {
         if (!$ticket) {
             $ticket = new Ticket;
+
             $ticket->setIsActive(true)
                 ->setCreatedAt(new \DateTimeImmutable());
             $title = 'Création d\'un ticket';
+            $this->ticketTraitement->apply($ticket, 'to_wip');
         } else {
             $title = "Modification du ticket n° : {$ticket->getId()}";
         }
 
 
-
         $form = $this->createForm(TicketType::class, $ticket, []);
 
+        // modifier le status du ticket quand il est consulté
+        // changer le currentPlace de initial à wip avec le workflow
+        $workflow = $this->registry->get($ticket, 'ticketTraitement');
+        $workflow->apply($ticket, 'to_wip');
+        dump($ticket);
+        
+        dd($workflow);
+        
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
-
+            
             $this->ticketRepository->add($ticket, true);
+            
             return $this->redirectToRoute('app_ticket');
         }
 
@@ -101,5 +113,20 @@ class TicketController extends AbstractController
         $this->ticketRepository->remove($ticket, true);
 
         return $this->redirectToRoute('app_ticket');
+    }
+
+    /**
+     * @Route("/update/{id}/{to}", name="ticket_workflow")
+     */
+    public function changeTicketWorkflow(Ticket $ticket, String $to, EntityManagerInterface $entityManager)
+    {
+        $this->ticketTraitement->apply($ticket, $to);
+
+        $entityManager->persist($ticket);
+        $entityManager->flush();
+
+        $this->addFlash('success', "Ticket pris en charge !");
+
+        return $this->redirectToRoute('ticket_update');
     }
 }
