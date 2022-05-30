@@ -55,12 +55,19 @@ class TicketController extends AbstractController
     }
 
     /**
+     * * I want to change the status of the ticket when it is consulted.
+     * I want to change the currentPlace of initial to wip with the workflow.
+     * 
+     * @param Request  $request - The request object.
+     * @param Ticket  $ticket - The object that will be used to initialize the form.
+     * 
+     * Generated on 05/30/2022 Gwilymm
+     */
+    /** 
      * @Route("/userForm", name="ticket_create")
      * @Route("/update/{id}", name="ticket_update",requirements={"id"="\d+"})
      * 
      */
-
-
     public function ticket(Request $request, Ticket $ticket = null)
     {
 
@@ -116,7 +123,16 @@ class TicketController extends AbstractController
 
 
 
+
+
     /**
+     * It closes a ticket
+     * @param Ticket  $ticket - The object that is being passed through the workflow.
+     * @returns A response object.
+     * 
+     * Generated on 05/30/2022 Gwilymm
+     */
+    /** 
      * @Route("/close/{id}", name="ticket_close",requirements={"id"="\d+"})
      */
     public function closeTicket(Ticket $ticket): Response
