@@ -21,7 +21,7 @@ class TicketController extends AbstractController
 
     protected TicketRepository $ticketRepository;
 
-    private WorkflowInterface $ticketTraitement;
+
 
 
     /**
@@ -43,11 +43,10 @@ class TicketController extends AbstractController
      */
     public function index(TicketRepository $repository): Response
     {
-        $user = $this->getUser();
+
 
         $tickets = $repository->findAll();
 
-        //dd($tickets);
 
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
