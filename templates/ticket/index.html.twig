@@ -16,7 +16,14 @@
 			Liste des Tickets
 		</h1>
 		<a href="{{path('ticket_create')}}" class="btn btn-primary">Création</a>
-		<a href="{{path('app_user_index')}}" class="btn btn-primary">Gestion salariés</a>
+
+
+		{% if app.user.roles[0] == 'ROLE_ADMIN' %}
+
+
+			<a href="{{path('app_user_index')}}" class="btn btn-primary">Gestion salariés</a>
+
+		{% endif %}
 		<table class="table table-striped tabled-bordered" id="myTable">
 			<thead>
 				<th>ID</th>
@@ -42,7 +49,7 @@
 							</a>
 							{% if ticket.ticketStatut == 'finished' %}
 								<a href="{{path('ticket_delete',{'id' :ticket.id})}}" class="btn btn-danger">
-									<i class="fa-solid fa-trash-can"></i>
+									<em class="fa-solid fa-trash-can"></em>
 								</a>
 							{% endif %}
 

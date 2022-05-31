@@ -1,5 +1,9 @@
 {{ form_start(form) }}
 {{ form_widget(form) }}
+<a href="{{ path('app_user_index') }}" class="btn btn-primary">
+	<em class="fa-solid fa-backward"></em>
+</a>
 <button class="btn">{{ button_label|default('Save') }}</button>
+
 
 {{ form_end(form) }}
