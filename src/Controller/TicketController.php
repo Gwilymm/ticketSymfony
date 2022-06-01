@@ -7,6 +7,7 @@ use App\Form\TicketType;
 use App\Repository\TicketRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,6 +35,7 @@ class TicketController extends AbstractController
     public function __construct(TicketRepository $ticketRepository, Registry $registry, TranslatorInterface $translator)
     {
         $this->ticketRepository = $ticketRepository;
+        $this->translator = $translator;
         $this->registry = $registry;
         $this->translator = $translator;
     }
@@ -112,8 +114,21 @@ class TicketController extends AbstractController
                 );
             }
 
+            if ($request->attributes->get("_route") === "ticket_create") {
+                $this->addFlash(
+                    'success',
+                    'Votre ticket a bien été ajouté'
+                );
+            } else {
+                $this->addFlash(
+                    'info',
+                    'Votre ticket a bien été mis à jour'
+                );
+            }
+
             return $this->redirectToRoute('app_ticket');
         }
+
 
         return $this->render(
             'ticket/userForm.html.twig',
