@@ -22,10 +22,12 @@
 	<body>
 		{% include 'shared/_language_selector.html.twig' %}
 		{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-			<p>{{ 'user.connected_as' | trans }}
+			<p>{{ "user.connected_as" | trans }}
 				{{app.user.name}}</p>
-			<a href="{{path('app_logout')}}">{{ 'user.logout' | trans }}</a>
+			<a href="{{path('app_logout')}}">{{ "user.logout" | trans }}</a>
 		{% endif %}
+
+
 		{% block body %}{% endblock %}
 	</body>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

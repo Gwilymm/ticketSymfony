@@ -16,15 +16,18 @@ use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
+<<<<<<< HEAD
  * @Route("{_locale}/ticket",requirements={"_locale": "en|fr"})
+=======
+ * @Route("/{_locale}/ticket", requirements={"_locale": "en|fr"})
+>>>>>>> d9c38d323995a8bf59d020fb1de066ed74e4effc
  */
 class TicketController extends AbstractController
 {
 
     protected TicketRepository $ticketRepository;
 
-    protected TranslatorInterface $ts;
-
+    protected TranslatorInterface $translator;
 
 
     /**
@@ -33,11 +36,12 @@ class TicketController extends AbstractController
      * @param TicketRepository $ticketRepository
      */
 
-    public function __construct(TicketRepository $ticketRepository, Registry $registry, TranslatorInterface $ts)
+    public function __construct(TicketRepository $ticketRepository, Registry $registry, TranslatorInterface $translator)
     {
         $this->ticketRepository = $ticketRepository;
         $this->ts = $ts;
         $this->registry = $registry;
+        $this->translator = $translator;
     }
 
 
@@ -80,11 +84,20 @@ class TicketController extends AbstractController
             $ticket->setTicketStatut("initial")
                 ->setCreatedAt(new \DateTimeImmutable());
             //$title = 'Création d\'un ticket';
+<<<<<<< HEAD
             $title = $this->ts->trans("title.ticket.create");
         } else {
             $title = $this->ts->trans("title.ticket.update") . "{$ticket->getId()}";
             $workflow = $this->registry->get($ticket, 'ticketTraitement');
             if ($ticket->getTicketStatut() != 'wip') {
+=======
+            $title = $this->translator->trans("title.ticket.create");
+        } else {
+            //$title = "Modification du ticket n° : {$ticket->getId()}";
+            $title = $this->translator->trans("title.ticket.update") . "{$ticket->getId()}";
+            $workflow = $this->registry->get($ticket, 'ticketTraitement');
+            if ($ticket->getTicketStatut() != "wip") {
+>>>>>>> d9c38d323995a8bf59d020fb1de066ed74e4effc
                 $workflow->apply($ticket, 'to_wip');
             }
         }

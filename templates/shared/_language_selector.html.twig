@@ -1,17 +1,18 @@
-<style>
-	#language_selector:first-child {
-		border-radius: 64px 0 0 64px;
-	}
+{% block stylesheets %}
+	<style>
+		#language_selector:first-child {
+			border-radius: 64px 0 0 64px;
+		}
 
-	#language_selector:last-child {
-		border-radius: 0 64px 64px 0;
-	}
+		#language_selector:last-child {
+			border-radius: 0 64px 64px 0;
+		}
 
-	#language_selector a {
-		vertical-align: text-bottom;
-	}
-</style>
-
+		#language_selector a {
+			vertical-align: text-bottom;
+		}
+	</style>
+{% endblock %}
 <div id="language_selector" class="btn-group" role="group" aria-label="Basic radio toggle button group">
 
 	<a href="{{ app.request.requesturi | replace({'/en/': '/fr/'}) }}" class="btn {{ app.request.locale == " fr" ? " btn-check btn-primary" : " btn-outline-primary" }}">
