@@ -37,7 +37,6 @@ class TicketController extends AbstractController
         $this->ticketRepository = $ticketRepository;
         $this->translator = $translator;
         $this->registry = $registry;
-        $this->translator = $translator;
     }
 
 
