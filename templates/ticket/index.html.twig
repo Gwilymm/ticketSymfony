@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des Tickets
+{% block title %}
+	{{ "title.ticket.list" | trans }}
 {% endblock %}
 
 {% block stylesheets %}
@@ -13,17 +14,17 @@
 {% block body %}
 	<div class="container">
 		<h1 class="my-3">
-			Liste des Tickets
+			{{ "title.ticket.list" | trans }}
 		</h1>
 		<a href="{{path('ticket_create')}}" class="btn btn-primary">Création</a>
 		<a href="{{path('app_user_index')}}" class="btn btn-primary">Gestion salariés</a>
 		<table class="table table-striped tabled-bordered" id="myTable">
 			<thead>
 				<th>ID</th>
-				<th>Object</th>
-				<th>Created At</th>
-				<th>Departement</th>
-				<th>Status</th>
+				<th>{{ "table.header.subject" | trans }}</th>
+				<th>{{ "table.header.creation_date" | trans }}</th>
+				<th>{{ "table.header.department" | trans }}</th>
+				<th>{{ "table.header.status" | trans }}</th>
 				<th>Action</th>
 			</thead>
 			<tbody>
@@ -67,7 +68,17 @@
 	<script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
 	<script>
 		$(document).ready(function () {
+
+
+
+
+
 $('#myTable').DataTable();
+
+
+
+
+
 });
 	</script>
 {% endblock %}

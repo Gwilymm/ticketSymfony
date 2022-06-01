@@ -12,16 +12,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Workflow\Registry;
 use Symfony\Component\Workflow\WorkflowInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Route("/ticket")
+ * @Route("/{_locale}/ticket", requirements={"_locale": "en|fr"})
  */
 class TicketController extends AbstractController
 {
 
     protected TicketRepository $ticketRepository;
 
-
+    protected TranslatorInterface $translator;
 
 
     /**
@@ -30,10 +31,11 @@ class TicketController extends AbstractController
      * @param TicketRepository $ticketRepository
      */
 
-    public function __construct(TicketRepository $ticketRepository, Registry $registry)
+    public function __construct(TicketRepository $ticketRepository, Registry $registry, TranslatorInterface $translator)
     {
         $this->ticketRepository = $ticketRepository;
         $this->registry = $registry;
+        $this->translator = $translator;
     }
 
 
@@ -75,11 +77,15 @@ class TicketController extends AbstractController
 
             $ticket->setTicketStatut("initial")
                 ->setCreatedAt(new \DateTimeImmutable());
-            $title = 'Création d\'un ticket';
+            //$title = 'Création d\'un ticket';
+            $title = $this->translator->trans("title.ticket.create");
         } else {
-            $title = "Modification du ticket n° : {$ticket->getId()}";
+            //$title = "Modification du ticket n° : {$ticket->getId()}";
+            $title = $this->translator->trans("title.ticket.update") . "{$ticket->getId()}";
             $workflow = $this->registry->get($ticket, 'ticketTraitement');
-            $workflow->apply($ticket, 'to_wip');
+            if ($ticket->getTicketStatut() != "wip") {
+                $workflow->apply($ticket, 'to_wip');
+            }
         }
 
 
