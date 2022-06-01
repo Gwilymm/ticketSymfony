@@ -100,6 +100,17 @@ class TicketController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $this->ticketRepository->add($ticket, true);
+            if ($request->attributes->get('_route') === 'ticket_creation') {
+                $this->addFlash(
+                    'success',
+                    'Votre ticket a bien été ajouté'
+                );
+            } else {
+                $this->addFlash(
+                    'info',
+                    'Votre ticket a bien été mis à jour'
+                );
+            }
 
             return $this->redirectToRoute('app_ticket');
         }
@@ -122,6 +133,10 @@ class TicketController extends AbstractController
     public function deleteTicket(Ticket $ticket): Response
     {
         $this->ticketRepository->remove($ticket, true);
+        $this->addFlash(
+            'warning',
+            'Votre ticket a bien été supprimé'
+        );
 
         return $this->redirectToRoute('app_ticket');
     }
