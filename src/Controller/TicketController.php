@@ -79,10 +79,10 @@ class TicketController extends AbstractController
 
             $ticket->setTicketStatut("initial")
                 ->setCreatedAt(new \DateTimeImmutable());
-            //$title = 'Création d\'un ticket';
+
             $title = $this->translator->trans("title.ticket.create");
         } else {
-            //$title = "Modification du ticket n° : {$ticket->getId()}";
+
             $title = $this->translator->trans("title.ticket.update") . "{$ticket->getId()}";
             $workflow = $this->registry->get($ticket, 'ticketTraitement');
             if ($ticket->getTicketStatut() != "wip") {
