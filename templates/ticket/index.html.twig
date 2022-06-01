@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des Tickets
+{% block title %}
+	{{ 'title.ticket.list' | trans }}
 {% endblock %}
 
 {% block stylesheets %}
@@ -13,7 +14,7 @@
 {% block body %}
 	<div class="container">
 		<h1 class="my-3">
-			Liste des Tickets
+			{{ 'title.ticket.list' | trans }}
 		</h1>
 		<a href="{{path('ticket_create')}}" class="btn btn-primary">Création</a>
 

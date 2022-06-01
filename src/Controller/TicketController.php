@@ -7,20 +7,23 @@ use App\Form\TicketType;
 use App\Repository\TicketRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Workflow\Registry;
 use Symfony\Component\Workflow\WorkflowInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Route("/ticket")
+ * @Route("{_locale}/ticket",requirements={"_locale": "en|fr"})
  */
 class TicketController extends AbstractController
 {
 
     protected TicketRepository $ticketRepository;
 
+    protected TranslatorInterface $ts;
 
 
 
@@ -30,9 +33,10 @@ class TicketController extends AbstractController
      * @param TicketRepository $ticketRepository
      */
 
-    public function __construct(TicketRepository $ticketRepository, Registry $registry)
+    public function __construct(TicketRepository $ticketRepository, Registry $registry, TranslatorInterface $ts)
     {
         $this->ticketRepository = $ticketRepository;
+        $this->ts = $ts;
         $this->registry = $registry;
     }
 
@@ -75,11 +79,14 @@ class TicketController extends AbstractController
 
             $ticket->setTicketStatut("initial")
                 ->setCreatedAt(new \DateTimeImmutable());
-            $title = 'Création d\'un ticket';
+            //$title = 'Création d\'un ticket';
+            $title = $this->ts->trans("title.ticket.create");
         } else {
-            $title = "Modification du ticket n° : {$ticket->getId()}";
+            $title = $this->ts->trans("title.ticket.update") . "{$ticket->getId()}";
             $workflow = $this->registry->get($ticket, 'ticketTraitement');
-            $workflow->apply($ticket, 'to_wip');
+            if ($ticket->getTicketStatut() != 'wip') {
+                $workflow->apply($ticket, 'to_wip');
+            }
         }
 
 

@@ -20,10 +20,11 @@
 
 	</head>
 	<body>
+		{% include 'shared/_language_selector.html.twig' %}
 		{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-			<p>Vous êtes connecté en tant que
+			<p>{{ 'user.connected_as' | trans }}
 				{{app.user.name}}</p>
-			<a href="{{path('app_logout')}}">Déconnecter</a>
+			<a href="{{path('app_logout')}}">{{ 'user.logout' | trans }}</a>
 		{% endif %}
 		{% block body %}{% endblock %}
 	</body>
