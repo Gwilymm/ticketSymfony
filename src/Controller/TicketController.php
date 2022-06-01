@@ -16,11 +16,7 @@ use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
-<<<<<<< HEAD
- * @Route("{_locale}/ticket",requirements={"_locale": "en|fr"})
-=======
  * @Route("/{_locale}/ticket", requirements={"_locale": "en|fr"})
->>>>>>> d9c38d323995a8bf59d020fb1de066ed74e4effc
  */
 class TicketController extends AbstractController
 {
@@ -39,7 +35,7 @@ class TicketController extends AbstractController
     public function __construct(TicketRepository $ticketRepository, Registry $registry, TranslatorInterface $translator)
     {
         $this->ticketRepository = $ticketRepository;
-        $this->ts = $ts;
+        $this->translator = $translator;
         $this->registry = $registry;
         $this->translator = $translator;
     }
@@ -84,20 +80,12 @@ class TicketController extends AbstractController
             $ticket->setTicketStatut("initial")
                 ->setCreatedAt(new \DateTimeImmutable());
             //$title = 'Création d\'un ticket';
-<<<<<<< HEAD
-            $title = $this->ts->trans("title.ticket.create");
-        } else {
-            $title = $this->ts->trans("title.ticket.update") . "{$ticket->getId()}";
-            $workflow = $this->registry->get($ticket, 'ticketTraitement');
-            if ($ticket->getTicketStatut() != 'wip') {
-=======
             $title = $this->translator->trans("title.ticket.create");
         } else {
             //$title = "Modification du ticket n° : {$ticket->getId()}";
             $title = $this->translator->trans("title.ticket.update") . "{$ticket->getId()}";
             $workflow = $this->registry->get($ticket, 'ticketTraitement');
             if ($ticket->getTicketStatut() != "wip") {
->>>>>>> d9c38d323995a8bf59d020fb1de066ed74e4effc
                 $workflow->apply($ticket, 'to_wip');
             }
         }
@@ -115,8 +103,21 @@ class TicketController extends AbstractController
 
             $this->ticketRepository->add($ticket, true);
 
+            if ($request->attributes->get("_route") === "ticket_create") {
+                $this->addFlash(
+                    'success',
+                    'Votre ticket a bien été ajouté'
+                );
+            } else {
+                $this->addFlash(
+                    'info',
+                    'Votre ticket a bien été mis à jour'
+                );
+            }
+
             return $this->redirectToRoute('app_ticket');
         }
+
 
         return $this->render(
             'ticket/userForm.html.twig',
@@ -136,6 +137,10 @@ class TicketController extends AbstractController
     public function deleteTicket(Ticket $ticket): Response
     {
         $this->ticketRepository->remove($ticket, true);
+        $this->addFlash(
+            'warning',
+            'Votre ticket a bien été supprimé'
+        );
 
         return $this->redirectToRoute('app_ticket');
     }

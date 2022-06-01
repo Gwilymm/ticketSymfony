@@ -21,6 +21,16 @@
 	</head>
 	<body>
 		{% include 'shared/_language_selector.html.twig' %}
+		{% for type, messages in app.flashes %}
+			{% for message in messages %}
+
+				<div class="alert alert-{{ type}} text-center">
+					{{message}}
+				</div>
+
+			{% endfor %}
+
+		{% endfor %}
 		{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 			<p>{{ "user.connected_as" | trans }}
 				{{app.user.name}}</p>
