@@ -16,7 +16,15 @@
 		<h1 class="my-3">
 			{{ "title.ticket.list" | trans }}
 		</h1>
-		<a href="{{path('ticket_create')}}" class="btn btn-primary">Création</a>
+		<center>
+			<a href="{{path('ticket_create')}}" class="btn btn-primary">Création</a>
+			<a href="{{ path('ticket_pdf')}}" class="btn btn-danger">
+				<em class="fas fa-file-pdf"></em>
+			</a>
+			<a href="{{ path('ticket_excel')}}" class="btn btn-success">
+				<em class="fas fa-table"></em>
+			</a>
+		</center>
 
 
 		{% if app.user.roles[0] == 'ROLE_ADMIN' %}
@@ -30,14 +38,14 @@
 				<th>ID</th>
 				<th>{{ "table.header.subject" | trans }}</th>
 				<th>{{ "table.header.creation_date" | trans }}</th>
-				<th>{{ "table.header.department" | trans }}</th>
+				<th>{{ "table.header.departement" | trans }}</th>
 				<th>{{ "table.header.status" | trans }}</th>
 				<th>Action</th>
 			</thead>
 			<tbody>
 				{% for ticket in tickets %}
 
-					<tr>
+					<tr class="link" data-href="{{ path('ticket_detail', {'id': ticket.id}) }}" style="cursor: pointer;">
 						<th scope="row">{{ticket.ID}}</th>
 						<td>{{ticket.object}}</td>
 						<td>{{ticket.createdAt | date('d/m/Y H:i')}}</td>
@@ -74,10 +82,30 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
 	<script>
-		$(document).ready(function () {
+		$(document).on('click', 'tr.link:not(a)', function (i) {
+
+
+
+
+
+i.stopPropagation();
+window.location.href = $(this).data('href');
+
+
+
+
+
+});
+$(document).ready(function () {
+
+
+
 
 
 $('#myTable').DataTable();
+
+
+
 
 
 });
