@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Ticket;
+use App\Entity\User;
 use App\Form\TicketType;
 use App\Repository\TicketRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Workflow\Registry;
 use Symfony\Component\Workflow\WorkflowInterface;
@@ -25,6 +27,10 @@ class TicketController extends AbstractController
 
     protected TranslatorInterface $translator;
 
+    protected MailerInterface $mailer;
+
+
+
 
     /**
      * Undocumented function
@@ -32,12 +38,13 @@ class TicketController extends AbstractController
      * @param TicketRepository $ticketRepository
      */
 
-    public function __construct(TicketRepository $ticketRepository, Registry $registry, TranslatorInterface $translator)
+    public function __construct(TicketRepository $ticketRepository, Registry $registry, TranslatorInterface $translator, MailerInterface $mailer)
     {
         $this->ticketRepository = $ticketRepository;
         $this->translator = $translator;
         $this->registry = $registry;
         $this->translator = $translator;
+        $this->mailer = $mailer;
     }
 
 
@@ -107,24 +114,16 @@ class TicketController extends AbstractController
                     'success',
                     'Votre ticket a bien été ajouté'
                 );
+                MailerController::sendEmail($this->mailer, "cornedecheval@BHN.bzh", "Ticket ajouté", " a bien été ajouté", $ticket);
             } else {
                 $this->addFlash(
                     'info',
                     'Votre ticket a bien été mis à jour'
                 );
+                MailerController::sendEmail($this->mailer, "cornedecheval@BHN.bzh", "Ticket modifié", " a bien été modifié", $ticket);
             }
 
-            if ($request->attributes->get("_route") === "ticket_create") {
-                $this->addFlash(
-                    'success',
-                    'Votre ticket a bien été ajouté'
-                );
-            } else {
-                $this->addFlash(
-                    'info',
-                    'Votre ticket a bien été mis à jour'
-                );
-            }
+
 
             return $this->redirectToRoute('app_ticket');
         }
@@ -145,13 +144,16 @@ class TicketController extends AbstractController
      * @return Reponse
      */
 
-    public function deleteTicket(Ticket $ticket): Response
+    public function deleteTicket(Ticket $ticket, MailerInterface $mailer): Response
     {
+
+
         $this->ticketRepository->remove($ticket, true);
         $this->addFlash(
             'warning',
             'Votre ticket a bien été supprimé'
         );
+        MailerController::sendEmail($this->mailer, "user1@test.fr", "Ticket Supprimé", " a bien été supprimé", $ticket);
 
         return $this->redirectToRoute('app_ticket');
     }
@@ -179,5 +181,14 @@ class TicketController extends AbstractController
 
 
         return $this->redirectToRoute('app_ticket');
+    }
+    /**
+     * @Route("/details/{id}", name="ticket_detail", requirements={"id"="\d+"})
+     */
+
+    public function detailTicket(Ticket $ticket): Response
+    {
+
+        return $this->render('ticket/detail.html.twig', ['ticket' => $ticket]);
     }
 }
