@@ -23,6 +23,12 @@
 
 
 			<a href="{{path('app_user_index')}}" class="btn btn-primary">Gestion salariés</a>
+			<a href="{{ path('ticket_pdf')}}" class="btn btn-danger">
+				<i class="fa-solid fa-file-pdf"></i>
+			</a>
+			<a href="{{ path('ticket_excel')}}" class="btn btn-success">
+				<i class="fa-solid fa-file-excel"></i>
+			</a>
 
 		{% endif %}
 		<table class="table table-striped tabled-bordered" id="myTable">
@@ -33,6 +39,7 @@
 				<th>{{ "table.header.department" | trans }}</th>
 				<th>{{ "table.header.status" | trans }}</th>
 				<th>Action</th>
+
 			</thead>
 			<tbody>
 				{% for ticket in tickets %}
@@ -62,6 +69,7 @@
 							{% endif %}
 
 						</td>
+
 					</tr>
 
 				{% endfor %}
