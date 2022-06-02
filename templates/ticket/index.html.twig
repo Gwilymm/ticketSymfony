@@ -62,7 +62,7 @@
 								</a>
 							{% endif %}
 
-							{% if ticket.ticketStatut == 'wip' %}
+							{% if ticket.ticketStatut == 'wip' or ticket.ticketStatut == 'clientAcceptance' %}
 								<a href="{{path('ticket_close',{'id' :ticket.id})}}" class="btn btn-warning">
 									<em class="fa-solid fa-square-xmark"></em>
 								</a>

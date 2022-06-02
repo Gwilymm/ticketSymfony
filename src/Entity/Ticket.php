@@ -32,7 +32,7 @@ class Ticket
     /**
      * @ORM\Column(type="string", columnDefinition="ENUM('initial','wip','clientAcceptance','finished')")
      */
-    private $ticket_statut;
+    private $ticketStatut;
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -153,12 +153,12 @@ class Ticket
 
     public function getTicketStatut(): ?string
     {
-        return $this->ticket_statut;
+        return $this->ticketStatut;
     }
 
-    public function setTicketStatut(string $ticket_statut): self
+    public function setTicketStatut(string $ticketStatut): self
     {
-        $this->ticket_statut = $ticket_statut;
+        $this->ticketStatut = $ticketStatut;
 
         return $this;
     }

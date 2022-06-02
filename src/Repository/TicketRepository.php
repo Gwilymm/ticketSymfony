@@ -61,31 +61,47 @@ class TicketRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // /**
-    //  * Obtenez tous les tickets actifs.
-    //  * 
-    //  * @return array tableau d'objets.
-    //  */
-    // public function getAllActive()
-    // {
-    //     return $this->createQueryBuilder('t')
-    //         ->where('t.ticketStatut =' . "initial")
-    //         ->getQuery()
-    //         ->getResult();
-    // }
+    /**
+     * Obtenez tous les tickets actifs.
+     * 
+     * @return array tableau d'objets.
+     */
+    public function getAllActive()
+    {
+        return $this->createQueryBuilder('t')
+            ->where("t.ticketStatut = 'initial'")
+            ->getQuery()
+            ->getResult();
+    }
 
-    // /**
-    //  * Il renvoie tous les enregistrements où le champ isActive est égal à 0.
-    //  * 
-    //  * @return array tableau d'objets.
-    //  */
-    // public function getAllNoActive()
-    // {
-    //     return $this->createQueryBuilder('t')
-    //         ->where('t.ticketStatut = finished')
-    //         ->getQuery()
-    //         ->getResult();
-    // }
+    /**
+     * Il renvoie tous les enregistrements où le champ isActive est égal à 0.
+     * 
+     * @return array tableau d'objets.
+     */
+    public function getAllNoActive()
+    {
+        return $this->createQueryBuilder('t')
+            ->where("t.ticketStatut = 'finished'")
+            ->getQuery()
+            ->getResult();
+    }
+
+   /**
+    * Obtenez tous les billets avec un statut spécifique
+    * 
+    * @param value la valeur du statut que vous souhaitez obtenir
+    * 
+    * @return array tableau d'objets Ticket.
+    */
+    public function getAllWithStatus($value): array
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.ticketStatut = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult();
+    }
 
     //    /**
     //     * @return Ticket[] Returns an array of Ticket objects

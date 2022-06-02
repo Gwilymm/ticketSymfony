@@ -21,10 +21,10 @@ class HomeController extends AbstractController
      */
     public function index(): Response
     {
-        // $countActiveTicket = count($this->ticketRepository->getAllActive());
-        // $countNoActiveTicket = count($this->ticketRepository->getAllNoActive());
-        $countActiveTicket = count($this->ticketRepository->findBy(['ticket_statut' => 'initial']));
-        $countNoActiveTicket = count($this->ticketRepository->findBy(['ticket_statut' => 'finished']));
+        $countActiveTicket = count($this->ticketRepository->getAllWithStatus('initial'));
+        $countNoActiveTicket = count($this->ticketRepository->getAllNoActive('finished'));
+        //$countActiveTicket = count($this->ticketRepository->findBy(['ticket_statut' => 'initial']));
+        //$countNoActiveTicket = count($this->ticketRepository->findBy(['ticket_statut' => 'finished']));
 
         $tabDep = [];
         $tabTickets = [];
