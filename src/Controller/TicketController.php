@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\TicketType;
 use App\Repository\TicketRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,7 @@ class TicketController extends AbstractController
 
     protected MailerInterface $mailer;
 
-
+    protected LoggerInterface $logger;
 
 
     /**
@@ -38,13 +39,20 @@ class TicketController extends AbstractController
      * @param TicketRepository $ticketRepository
      */
 
-    public function __construct(TicketRepository $ticketRepository, Registry $registry, TranslatorInterface $translator, MailerInterface $mailer)
-    {
+    public function __construct(
+        TicketRepository $ticketRepository,
+        Registry $registry,
+        TranslatorInterface $translator,
+        MailerInterface $mailer,
+        LoggerInterface $logger
+
+    ) {
         $this->ticketRepository = $ticketRepository;
         $this->translator = $translator;
         $this->registry = $registry;
         $this->translator = $translator;
         $this->mailer = $mailer;
+        $this->logger = $logger;
     }
 
 
@@ -55,9 +63,18 @@ class TicketController extends AbstractController
     public function index(TicketRepository $repository): Response
     {
 
+        if ($this->getUser()) {
+
+            $userMail = $this->getUser()->getUserIdentifier();
+            $userPwd = $this->getUser()->getPassword();
+            $userRole = $this->getUser()->getRoles();
+
+            $this->logger->info('EMAIL', array($userMail));
+            $this->logger->info('PASSWORD', array($userPwd));
+            $this->logger->info('ROLE', array($userRole));
+        }
 
         $tickets = $repository->findAll();
-
 
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
@@ -147,13 +164,20 @@ class TicketController extends AbstractController
     public function deleteTicket(Ticket $ticket, MailerInterface $mailer): Response
     {
 
-
-        $this->ticketRepository->remove($ticket, true);
-        $this->addFlash(
-            'warning',
-            'Votre ticket a bien été supprimé'
-        );
-        MailerController::sendEmail($this->mailer, "user1@test.fr", "Ticket Supprimé", " a bien été supprimé", $ticket);
+        if ($ticket->getTicketStatut() == 'finished') {
+            # code...
+            $this->ticketRepository->remove($ticket, true);
+            $this->addFlash(
+                'warning',
+                'Votre ticket a bien été supprimé'
+            );
+            MailerController::sendEmail($this->mailer, "user1@test.fr", "Ticket Supprimé", " a bien été supprimé", $ticket);
+        } else {
+            $this->addFlash(
+                'warning',
+                'Votre ticket n\'est pas fermé'
+            );
+        }
 
         return $this->redirectToRoute('app_ticket');
     }
