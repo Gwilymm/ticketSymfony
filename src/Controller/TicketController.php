@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Workflow\Registry;
 use Symfony\Component\Workflow\WorkflowInterface;
@@ -22,8 +23,8 @@ class TicketController extends AbstractController
 {
 
     protected TicketRepository $ticketRepository;
-
     protected TranslatorInterface $translator;
+    protected MailerInterface $mailer;
 
 
     /**
@@ -32,11 +33,12 @@ class TicketController extends AbstractController
      * @param TicketRepository $ticketRepository
      */
 
-    public function __construct(TicketRepository $ticketRepository, Registry $registry, TranslatorInterface $translator)
+    public function __construct(TicketRepository $ticketRepository, Registry $registry, TranslatorInterface $translator, MailerInterface $mailer)
     {
         $this->ticketRepository = $ticketRepository;
         $this->translator = $translator;
         $this->registry = $registry;
+        $this->mailer = $mailer;
     }
 
 
@@ -106,11 +108,13 @@ class TicketController extends AbstractController
                     'success',
                     'Votre ticket a bien été ajouté'
                 );
+                MailerController::sendEmail($this->mailer, "poneyPourDaron@sabot.fr", "ticket ajouté", "a bien été ajouté", $ticket);
             } else {
                 $this->addFlash(
                     'info',
                     'Votre ticket a bien été mis à jour'
                 );
+                MailerController::sendEmail($this->mailer, "poneyPourDaron@sabot.fr", "ticket modifié", "a bien été modifié", $ticket);
             }
 
             if ($request->attributes->get("_route") === "ticket_create") {
@@ -151,6 +155,8 @@ class TicketController extends AbstractController
             'warning',
             'Votre ticket a bien été supprimé'
         );
+
+        MailerController::sendEmail($this->mailer, "user1@test.fr", "Ticket Supprimé", " a bien été supprimé", $ticket);
 
         return $this->redirectToRoute('app_ticket');
     }
