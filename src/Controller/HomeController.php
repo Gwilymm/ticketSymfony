@@ -33,6 +33,7 @@ class HomeController extends AbstractController
         //$countNoActiveTicket = count($this->ticketRepository->getAllNoActive());
         $countActiveTicket = count($this->ticketRepository->findBy(['ticket_statut' => 'initial']));
         $countNoActiveTicket = count($this->ticketRepository->findBy(['ticket_statut' => 'finished']));
+        $countWip = count($this->ticketRepository->findBy(['ticket_statut' => 'wip']));
         $tabDep = [];
         $tabTickets = [];
 
@@ -46,6 +47,7 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig', [
             'countActive' => $countActiveTicket,
             'countNoActive' => $countNoActiveTicket,
+            'countWip' => $countWip,
             'countDep' => $countDepGroupBy,
             'nbTickets' => $tabTickets,
             'nameDep' => implode(",", $tabDep),
