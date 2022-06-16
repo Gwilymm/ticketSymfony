@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Hello HomeController!
+{% endblock %}
+
+{% block body %}
+
+	<body>
+
+		<h1 style='margin-top:2%;margin-left:5%'>Tableau de bord</h1>
+
+		<div class="container">
+
+
+			<div class="col">
+				<canvas id="myChartActive" style="width:100%;max-width:700px;position:absolute;margin-left:50%;margin-top:3%"></canvas>
+				<canvas id="myChartDep" style="width:100%;max-width:700px;position:absolute;margin-left:10%;margin-top:3%"></canvas>
+
+			</div>
+			<div class="row">
+				<div class="col-s-1">
+					<div id="map" style="height:300px;width:300px"></div>
+				</div>
+			</div>
+
+
+		</div>
+	</body>
+
+{% endblock %}
+
+{% block javascripts %}
+	<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+	{# <script>
+			var map = L.map('map').setView([
+	49.14859, -0.35311307168720785
+	], 13);
+	
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '© GBAI'
+	}).addTo(map);
+	var marker = L.marker([49.14859, -0.35311307168720785]).addTo(map);
+		</script> #}
+
+	<script>
+		var graph = document.getElementById("myChartActive");
+var myCharts = new Chart('myChartActive', {
+type: 'pie',
+data: {
+labels: [
+'Tickets Terminés ', 'WIP', 'Ticket en Cours'
+],
+datasets: [
+{
+data: [
+{{ countNoActive }}, {{ countActive }}, {{ countWip }}
+],
+backgroundColor: ['blue', 'cyan']
+}
+]
+},
+options: {}
+});
+
+
+var graph = document.getElementById("myChartDep");
+var myCharts = new Chart('myChartDep', {
+type: 'doughnut',
+data: {
+labels: [{{ nameDep | raw }}],
+datasets: [
+{
+data: [{{ nbTickets | join(',') }}],
+backgroundColor: [
+'blue',
+'cyan',
+'pink',
+'violet',
+'brown',
+'orange',
+'red',
+'grey',
+'white',
+'yellow'
+]
+}
+]
+},
+options: {}
+});
+	</script>
+
+{% endblock javascripts %}

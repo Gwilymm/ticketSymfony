@@ -23,6 +23,12 @@
 
 
 			<a href="{{path('app_user_index')}}" class="btn btn-primary">Gestion salariés</a>
+			<a href="{{ path('ticket_pdf')}}" class="btn btn-danger">
+				<i class="fa-solid fa-file-pdf"></i>
+			</a>
+			<a href="{{ path('ticket_excel')}}" class="btn btn-success">
+				<i class="fa-solid fa-file-excel"></i>
+			</a>
 
 		{% endif %}
 		<table class="table table-striped tabled-bordered" id="myTable">
@@ -33,11 +39,13 @@
 				<th>{{ "table.header.department" | trans }}</th>
 				<th>{{ "table.header.status" | trans }}</th>
 				<th>Action</th>
+
 			</thead>
 			<tbody>
 				{% for ticket in tickets %}
 
-					<tr>
+					<tr class="link" data-href="{{ path('ticket_detail', {'id': ticket.id}) }}" style="cursor: pointer;">
+
 						<th scope="row">{{ticket.ID}}</th>
 						<td>{{ticket.object}}</td>
 						<td>{{ticket.createdAt | date('d/m/Y H:i')}}</td>
@@ -61,6 +69,7 @@
 							{% endif %}
 
 						</td>
+
 					</tr>
 
 				{% endfor %}
@@ -74,7 +83,12 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
 	<script>
-		$(document).ready(function () {
+		$(document).on('click', 'tr.link:not(a)', function (i) {
+i.stopPropagation();
+window.location.href = $(this).data('href');
+});
+
+$(document).ready(function () {
 
 
 $('#myTable').DataTable();

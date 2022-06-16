@@ -72,6 +72,7 @@ class AppFixtures extends Fixture
 
         $allDpartements = $manager->getRepository(Departement::class)
             ->findAll();
+        $allUsers = $manager->getRepository(User::class)->findAll();
 
 
 
@@ -87,6 +88,7 @@ class AppFixtures extends Fixture
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setFinishedAt($ticket->getTicketStatut() != "finished" ? ImmutableDateTime::immutableDateTimeBetween('now', '6 months') : null)
                 ->setObject($faker->sentence(6))
+                ->setUser($faker->randomElement($allUsers))
                 ->setDepartement($faker->randomElement($allDpartements));
 
             $manager->persist($ticket);
